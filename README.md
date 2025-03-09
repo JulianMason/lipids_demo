@@ -88,24 +88,3 @@ lipid-ai-platform/
 ├── requirements.txt      # Python dependencies
 └── README.md             # This file
 ```
-
-## Future Potential Integrations
-
-This prototype demonstrates the core concept, but a full implementation could include:
-
-- **Advanced Modeling**: Non-linear models, deep learning for property prediction
-- **Lipidomics Integration**: Connect to external lipidomics databases
-- **Experimental Data**: Incorporate lab results for model validation
-- **Cost Optimization**: Economic analysis for oil blend formulation
-- **Sensory Properties**: Predict taste, aroma, and texture characteristics
-- **Health Impact**: Deeper analysis of nutritional and health effects
-
-## Contributing
-
-This is a research prototype, but contributions are welcome:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
