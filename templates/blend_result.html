@@ -1,0 +1,284 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0">Optimal Oil Blend Result</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success">
+                    <i class="bi bi-check-circle-fill"></i> 
+                    A blend has been found that closely matches your target fatty acid profile!
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header bg-primary text-white">
+                                Recommended Blend
+                            </div>
+                            <div class="card-body">
+                                <h5>Components:</h5>
+                                <ul class="list-group list-group-flush mb-3">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <strong>{{ blend.oil1 }}</strong>
+                                        <span class="badge bg-primary rounded-pill">{{ "%.1f"|format(blend.ratio * 100) }}%</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <strong>{{ blend.oil2 }}</strong>
+                                        <span class="badge bg-primary rounded-pill">{{ "%.1f"|format((1 - blend.ratio) * 100) }}%</span>
+                                    </li>
+                                </ul>
+                                
+                                <h5>Mixing Instructions:</h5>
+                                <p>
+                                    For 1 liter of blended oil, mix:
+                                </p>
+                                <ul>
+                                    <li>{{ "%.0f"|format(blend.ratio * 1000) }} ml of {{ blend.oil1 }}</li>
+                                    <li>{{ "%.0f"|format((1 - blend.ratio) * 1000) }} ml of {{ blend.oil2 }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header bg-info text-white">
+                                Target vs. Blend Comparison
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center mb-3">
+                                    <img src="data:image/png;base64,{{ blend_plot }}" class="img-fluid" alt="Target vs Blend Comparison">
+                                </div>
+                                
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Fatty Acid</th>
+                                            <th>Target (%)</th>
+                                            <th>Blend (%)</th>
+                                            <th>Difference</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>SFA</td>
+                                            <td>{{ "%.1f"|format(target_sfa) }}%</td>
+                                            <td>{{ "%.1f"|format(blend.blend_sfa) }}%</td>
+                                            <td>
+                                                {% set diff_sfa = blend.blend_sfa - target_sfa %}
+                                                {% if diff_sfa > 0 %}
+                                                <span class="text-danger">+{{ "%.1f"|format(diff_sfa) }}%</span>
+                                                {% else %}
+                                                <span class="text-primary">{{ "%.1f"|format(diff_sfa) }}%</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>MUFA</td>
+                                            <td>{{ "%.1f"|format(target_mufa) }}%</td>
+                                            <td>{{ "%.1f"|format(blend.blend_mufa) }}%</td>
+                                            <td>
+                                                {% set diff_mufa = blend.blend_mufa - target_mufa %}
+                                                {% if diff_mufa > 0 %}
+                                                <span class="text-danger">+{{ "%.1f"|format(diff_mufa) }}%</span>
+                                                {% else %}
+                                                <span class="text-primary">{{ "%.1f"|format(diff_mufa) }}%</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>PUFA</td>
+                                            <td>{{ "%.1f"|format(target_pufa) }}%</td>
+                                            <td>{{ "%.1f"|format(blend.blend_pufa) }}%</td>
+                                            <td>
+                                                {% set diff_pufa = blend.blend_pufa - target_pufa %}
+                                                {% if diff_pufa > 0 %}
+                                                <span class="text-danger">+{{ "%.1f"|format(diff_pufa) }}%</span>
+                                                {% else %}
+                                                <span class="text-primary">{{ "%.1f"|format(diff_pufa) }}%</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mb-3">
+                    <div class="card-header bg-info text-white">
+                        Predicted Properties
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Physical Properties</h5>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Property</th>
+                                            <th>Predicted Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Melting Point</td>
+                                            <td>{{ "%.1f"|format(blend_properties.MeltingPoint) }} °C</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Oxidative Stability</td>
+                                            <td>{{ "%.1f"|format(blend_properties.OxidativeStability) }} hours</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Smoke Point</td>
+                                            <td>{{ "%.1f"|format(blend_properties.SmokePoint) }} °C</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Estimated Cost</td>
+                                            <td>${{ "%.2f"|format(blend_properties.Cost) }}/L</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!--
+                            <div class="col-md-6">
+                                <div class="text-center">
+                                    <img src="data:image/png;base64,{{ property_plot }}" class="img-fluid" alt="Property Predictions">
+                                </div>
+                            </div>
+                        </div> -->
+                        
+                        <div class="mt-3">
+                            <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#advancedStats">
+                                Show Advanced Statistics
+                            </button>
+                            <div class="collapse mt-3" id="advancedStats">
+                                <div class="card card-body bg-light">
+                                    <h6>Model Performance Metrics</h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Property</th>
+                                                        <th>R² (Test)</th>
+                                                        <th>RMSE</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for prop, metrics in model_metrics.items() %}
+                                                    <tr>
+                                                        <td>{{ prop }}</td>
+                                                        <td>{{ "%.3f"|format(metrics.r2_test) }}</td>
+                                                        <td>{{ "%.3f"|format(metrics.rmse_test) }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="small text-muted">
+                                                <strong>Feature Importance Analysis:</strong> The fatty acid content most strongly influencing predictions:
+                                            </p>
+                                            <ul class="small">
+                                                {% for prop, feat in feature_importance.items() %}
+                                                <li>{{ prop }}: {{ feat }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header bg-warning">
+                        Potential Applications
+                    </div>
+                    <div class="card-body">
+                        <p>This blend could be suitable for the following applications:</p>
+                        
+                        <div class="row">
+                            {% if blend.blend_sfa > 30 %}
+                            <div class="col-md-4">
+                                <div class="card mb-2">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Baking & Pastry</h5>
+                                        <p class="card-text">Higher saturated fat content provides structure in baked goods.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if blend.blend_mufa > 50 %}
+                            <div class="col-md-4">
+                                <div class="card mb-2">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Heart-Healthy Products</h5>
+                                        <p class="card-text">High monounsaturated fat content is associated with cardiovascular benefits.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if blend.blend_pufa > 40 %}
+                            <div class="col-md-4">
+                                <div class="card mb-2">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Nutritional Supplements</h5>
+                                        <p class="card-text">High polyunsaturated fat content provides essential fatty acids.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if blend.blend_sfa < 20 and blend.blend_pufa < 30 %}
+                            <div class="col-md-4">
+                                <div class="card mb-2">
+                                    <div class="card-body">
+                                        <h5 class="card-title">High-Heat Cooking</h5>
+                                        <p class="card-text">Lower saturated and polyunsaturated fat balance provides better stability.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if blend.blend_sfa < 30 and blend.blend_mufa > 40 and blend.blend_pufa < 30 %}
+                            <div class="col-md-4">
+                                <div class="card mb-2">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Salad Dressings</h5>
+                                        <p class="card-text">Balanced profile with good flavor and moderate stability.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="col-md-4">
+                                <div class="card mb-2">
+                                    <div class="card-body">
+                                        <h5 class="card-title">General Purpose</h5>
+                                        <p class="card-text">This blend's balanced profile makes it suitable for various food applications.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <a href="/blend" class="btn btn-primary">Try Another Blend</a>
+                    <a href="/analyze" class="btn btn-secondary">Back to Analysis</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

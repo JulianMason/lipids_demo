@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0">Oil Blending Tool</h3>
+            </div>
+            <div class="card-body">
+                <p>This tool helps you find the optimal blend of two oils to achieve a desired fatty acid profile.</p>
+                
+                <form action="/blend" method="POST">
+                    <div class="alert alert-info">
+                        <p><strong>Specify your target fatty acid composition.</strong> The tool will identify the best oil blend to match this profile.</p>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="target_sfa" class="form-label">Target SFA %</label>
+                                <input type="number" class="form-control" id="target_sfa" name="target_sfa" 
+                                       min="10" max="90" step="1" value="30" required>
+                                <div class="form-text">Saturated Fatty Acids (C16:0, C18:0)</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="target_mufa" class="form-label">Target MUFA %</label>
+                                <input type="number" class="form-control" id="target_mufa" name="target_mufa" 
+                                       min="10" max="90" step="1" value="40" required>
+                                <div class="form-text">Monounsaturated Fatty Acids (C18:1)</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="target_pufa" class="form-label">Target PUFA %</label>
+                                <input type="number" class="form-control" id="target_pufa" name="target_pufa" 
+                                       min="10" max="90" step="1" value="30" required>
+                                <div class="form-text">Polyunsaturated Fatty Acids (C18:2, C18:3)</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress mb-3">
+                        <div id="sfa-bar" class="progress-bar bg-danger" role="progressbar" style="width: 30%">30%</div>
+                        <div id="mufa-bar" class="progress-bar bg-success" role="progressbar" style="width: 40%">40%</div>
+                        <div id="pufa-bar" class="progress-bar bg-info" role="progressbar" style="width: 30%">30%</div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Find Optimal Blend</button>
+                    </div>
+                </form>
+                
+                <hr>
+                
+                <div class="highlight">
+                    <h5>How It Works:</h5>
+                    <ol>
+                        <li>The tool calculates the SFA, MUFA, and PUFA content for each oil in your dataset</li>
+                        <li>It then explores all possible combinations of two oils at different ratios</li>
+                        <li>The algorithm identifies the blend that most closely matches your target profile</li>
+                        <li>Results include the recommended oils, mixing ratio, and expected fatty acid composition</li>
+                    </ol>
+                    <p class="small text-muted">
+                        <strong>Note:</strong> This is a simplified approach that focuses on SFA, MUFA, and PUFA categories. 
+                        A more advanced version could target specific fatty acids or incorporate additional factors like cost, 
+                        oxidative stability, or sensory properties.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Update progress bars when input values change
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('input', updateProgressBars);
+    });
+    
+    function updateProgressBars() {
+        let sfa = parseInt(document.getElementById('target_sfa').value) || 0;
+        let mufa = parseInt(document.getElementById('target_mufa').value) || 0;
+        let pufa = parseInt(document.getElementById('target_pufa').value) || 0;
+        
+        // Calculate total and normalize to 100%
+        let total = sfa + mufa + pufa;
+        
+        if (total > 0) {
+            let sfaPercent = (sfa / total) * 100;
+            let mufaPercent = (mufa / total) * 100;
+            let pufaPercent = (pufa / total) * 100;
+            
+            // Update the progress bars
+            document.getElementById('sfa-bar').style.width = sfaPercent + '%';
+            document.getElementById('sfa-bar').textContent = Math.round(sfaPercent) + '%';
+            
+            document.getElementById('mufa-bar').style.width = mufaPercent + '%';
+            document.getElementById('mufa-bar').textContent = Math.round(mufaPercent) + '%';
+            
+            document.getElementById('pufa-bar').style.width = pufaPercent + '%';
+            document.getElementById('pufa-bar').textContent = Math.round(pufaPercent) + '%';
+        }
+    }
+</script>
+{% endblock %}

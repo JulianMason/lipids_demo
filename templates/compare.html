@@ -1,0 +1,140 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Oil Comparison Tool</h3>
+            </div>
+            <div class="card-body">
+                <p>Select oils to compare their fatty acid profiles, nutritional indices, and physical properties.</p>
+                
+                <form id="compareForm" method="POST" action="/compare">
+                    <div class="row mb-4">
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label for="selectedOils" class="form-label">Select Oils to Compare:</label>
+                                <select class="form-select" id="selectedOils" name="selectedOils" multiple size="5" required>
+                                    {% for oil in oils %}
+                                    <option value="{{ oil }}">{{ oil }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="form-text">Hold Ctrl/Cmd to select multiple oils (2-5 recommended)</div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary">Compare</button>
+                        </div>
+                    </div>
+                </form>
+
+                {% if comparison_data %}
+                <div class="comparison-results">
+                    <h4>Comparison Results</h4>
+                    
+                    <!-- Tabs for different comparison views -->
+                    <ul class="nav nav-tabs mb-3" id="comparisonTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="fatty-acids-tab" data-bs-toggle="tab" data-bs-target="#fatty-acids" type="button" role="tab">
+                                Fatty Acid Profile
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="nutritional-tab" data-bs-toggle="tab" data-bs-target="#nutritional" type="button" role="tab">
+                                Nutritional Indices
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="properties-tab" data-bs-toggle="tab" data-bs-target="#properties" type="button" role="tab">
+                                Physical Properties
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="radar-tab" data-bs-toggle="tab" data-bs-target="#radar" type="button" role="tab">
+                                Radar Chart
+                            </button>
+                        </li>
+                    </ul>
+                    
+                    <!-- Tab content -->
+                    <div class="tab-content" id="comparisonTabContent">
+                        <!-- Fatty Acid Profile Tab -->
+                        <div class="tab-pane fade show active" id="fatty-acids" role="tabpanel">
+                            <div class="text-center mb-4">
+                                <img src="data:image/png;base64,{{ fatty_acid_plot }}" class="img-fluid" alt="Fatty Acid Comparison">
+                            </div>
+                            <div class="table-responsive">
+                                {{ fatty_acid_table|safe }}
+                            </div>
+                        </div>
+                        
+                        <!-- Nutritional Indices Tab -->
+                        <div class="tab-pane fade" id="nutritional" role="tabpanel">
+                            <div class="text-center mb-4">
+                                <img src="data:image/png;base64,{{ nutritional_plot }}" class="img-fluid" alt="Nutritional Indices Comparison">
+                            </div>
+                            <div class="table-responsive">
+                                {{ nutritional_table|safe }}
+                            </div>
+                        </div>
+                        
+                        <!-- Physical Properties Tab -->
+                        <div class="tab-pane fade" id="properties" role="tabpanel">
+                            <div class="text-center mb-4">
+                                <img src="data:image/png;base64,{{ properties_plot }}" class="img-fluid" alt="Physical Properties Comparison">
+                            </div>
+                            <div class="table-responsive">
+                                {{ properties_table|safe }}
+                            </div>
+                        </div>
+                        
+                        <!-- Radar Chart Tab -->
+                        <div class="tab-pane fade" id="radar" role="tabpanel">
+                            <div class="text-center mb-4">
+                                <img src="data:image/png;base64,{{ radar_plot }}" class="img-fluid" alt="Radar Chart Comparison">
+                            </div>
+                            <div class="alert alert-info">
+                                <p><strong>How to read the radar chart:</strong> This visualization shows how oils compare across multiple dimensions simultaneously. Each axis represents a different property, with values normalized to a 0-100 scale. Oils with larger areas generally have more favorable overall profiles, but the ideal profile depends on your specific application needs.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5>Replacement Recommendations</h5>
+                        <div class="alert alert-success">
+                            <p><strong>Based on this comparison:</strong></p>
+                            <ul>
+                                {% for recommendation in recommendations %}
+                                <li>{{ recommendation }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="highlight mt-4">
+                    <h5>How to Use This Comparison Tool:</h5>
+                    <ol>
+                        <li>Select 2-5 oils to compare from the dropdown menu</li>
+                        <li>Click "Compare" to generate detailed comparison visualizations</li>
+                        <li>Use the tabs to explore different aspects of the comparison</li>
+                        <li>Review the replacement recommendations for cost and nutrition optimisation</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Enable Bootstrap tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+{% endblock %}

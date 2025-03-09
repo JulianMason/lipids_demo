@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Lipid Analysis Tools</h5>
+            </div>
+            <div class="card-body">
+                <p>Analyze fatty acid composition and calculate nutritional indices:</p>
+                <div class="d-grid gap-2">
+                    <a href="/upload" class="btn btn-primary mb-2">Upload Your Data</a>
+                    <a href="/use_sample_data" class="btn btn-success mb-2">Use Sample Data</a>
+                    <a href="/analyze" class="btn btn-info">Run Analysis</a>
+                </div>
+                <hr>
+                <p class="small text-muted">
+                    <strong>Data format:</strong> CSV with columns for oil names and fatty acid compositions (e.g., C16:0, C18:1). 
+                    Optional property columns like MeltingPoint or OxidativeStability will enable predictive modeling.
+                </p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">Oil Comparison Tool</h5>
+            </div>
+            <div class="card-body">
+                <p>Compare oils to find the best options for your specific needs:</p>
+                <div class="d-grid gap-2">
+                    <a href="/compare" class="btn btn-warning">Compare Oils</a>
+                </div>
+                <hr>
+                <p>Key features:</p>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item"><i class="bi bi-arrow-right text-warning"></i> Side-by-side comparison of multiple oils</li>
+                    <li class="list-group-item"><i class="bi bi-arrow-right text-warning"></i> Find cost-competitive replacements</li>
+                    <li class="list-group-item"><i class="bi bi-arrow-right text-warning"></i> Identify nutritionally superior options</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Oil Blending Tool</h5>
+            </div>
+            <div class="card-body">
+                <p>Formulate oil blends with specific fatty acid profiles to meet your nutritional and functional requirements:</p>
+                <div class="d-grid gap-2">
+                    <a href="/blend" class="btn btn-success">Create Custom Oil Blend</a>
+                </div>
+                <hr>
+                <p>Key features:</p>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item"><i class="bi bi-arrow-right text-success"></i> Create blends with target fatty acid profiles</li>
+                    <li class="list-group-item"><i class="bi bi-arrow-right text-success"></i> Predict physical properties of blends</li>
+                    <li class="list-group-item"><i class="bi bi-arrow-right text-success"></i> Identify ideal applications for each blend</li>
+                    <li class="list-group-item"><i class="bi bi-arrow-right text-success"></i> Detailed advanced statistics and model metrics</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

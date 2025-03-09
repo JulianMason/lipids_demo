@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Data Upload</h3>
+            </div>
+            <div class="card-body">
+                <form action="/upload" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Upload data (CSV format)</label>
+                        <input type="file" class="form-control" id="file" name="file" accept=".csv">
+                        <div class="form-text">
+                            Your file should contain columns for oil names and fatty acid compositions.
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload & Analyze</button>
+                </form>
+                
+                <hr>
+                
+                <h5>Or use sample data</h5>
+                <p>Don't have a dataset ready? Use our sample dataset containing common oils and their properties.</p>
+                <a href="/use_sample_data" class="btn btn-success">Use Sample Data</a>
+                
+                <div class="mt-4">
+                    <h5>Expected Data Format</h5>
+                    <p>For best results, CSV should include:</p>
+                    <ul>
+                        <li><strong>Oil:</strong> Names of oils or samples</li>
+                        <li><strong>Fatty Acid Composition:</strong> Columns for different fatty acids (e.g., C16:0, C18:1)</li>
+                        <li><strong>Optional Properties:</strong> Physical/chemical properties like melting point, oxidative stability</li>
+                    </ul>
+                    
+                    <div class="highlight">
+                        <p><strong>Example data:</strong></p>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Oil</th>
+                                    <th>C16:0</th>
+                                    <th>C18:0</th>
+                                    <th>C18:1</th>
+                                    <th>C18:2</th>
+                                    <th>C18:3</th>
+                                    <th>MeltingPoint</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Olive Oil</td>
+                                    <td>13.0</td>
+                                    <td>2.7</td>
+                                    <td>71.1</td>
+                                    <td>10.0</td>
+                                    <td>0.6</td>
+                                    <td>-6.0</td>
+                                </tr>
+                                <tr>
+                                    <td>Coconut Oil</td>
+                                    <td>8.8</td>
+                                    <td>2.6</td>
+                                    <td>6.2</td>
+                                    <td>1.6</td>
+                                    <td>0.0</td>
+                                    <td>25.0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>Predicting {{ target_property }}</h2>
+
+<div class="alert alert-info">
+    <p>This model predicts {{ target_property }} based on the fatty acid composition (C16:0, C18:0, C18:1, C18:2, C18:3).</p>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                Prediction Performance
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-3">
+                    <img src="data:image/png;base64,{{ prediction_plot }}" class="img-fluid" alt="Prediction Performance">
+                </div>
+                <div class="highlight">
+                    <h5>Model Performance Metrics:</h5>
+                    <ul>
+                        <li><strong>R² (Training):</strong> {{ "%.3f"|format(r2_train) }}</li>
+                        <li><strong>R² (Test):</strong> {{ "%.3f"|format(r2_test) }}</li>
+                        <li><strong>RMSE (Test):</strong> {{ "%.3f"|format(rmse_test) }}</li>
+                    </ul>
+                    <p class="small text-muted">
+                        <strong>R²</strong> - Coefficient of determination (higher is better, max 1.0)<br>
+                        <strong>RMSE</strong> - Root Mean Square Error (lower is better)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                Feature Importance
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-3">
+                    <img src="data:image/png;base64,{{ feature_importance_plot }}" class="img-fluid" alt="Feature Importance">
+                </div>
+                <div class="highlight">
+                    <h5>Interpretation:</h5>
+                    <p>The coefficient values show how each fatty acid affects the predicted {{ target_property }}:</p>
+                    <ul>
+                        {% for feature, importance in feature_importance.items() %}
+                        <li>
+                            <strong>{{ feature }}:</strong> {{ "%.3f"|format(importance) }}
+                            {% if importance > 0 %}
+                                <span class="text-success">(positive impact)</span>
+                            {% else %}
+                                <span class="text-danger">(negative impact)</span>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <p class="small text-muted">
+                        Positive values indicate that increasing this fatty acid increases {{ target_property }}, 
+                        while negative values indicate the opposite.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header bg-info text-white">
+        Application & Significance
+    </div>
+    <div class="card-body">
+        <p>This predictive model demonstrates how fatty acid composition can be used to estimate {{ target_property }} without experimental measurement.</p>
+        <h5>Potential Applications:</h5>
+        <ul>
+            <li><strong>Product Development:</strong> Formulate oils with desired {{ target_property }} by adjusting fatty acid composition</li>
+            <li><strong>Quality Control:</strong> Verify if measured {{ target_property }} aligns with expected values based on composition</li>
+            <li><strong>Cost Optimization:</strong> Identify alternative oils with similar predicted {{ target_property }}</li>
+        </ul>
+        <p class="text-muted small">Note: This is a simplified linear model for demonstration. A more robust model would incorporate additional features and potentially non-linear relationships.</p>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="/analyze" class="btn btn-primary">Back to Analysis</a>
+    <a href="/blend" class="btn btn-success">Try Oil Blending</a>
+</div>
+{% endblock %}

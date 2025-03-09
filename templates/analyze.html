@@ -1,0 +1,136 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>Data Analysis</h2>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="data-tab" data-bs-toggle="tab" data-bs-target="#data" type="button" role="tab">Raw Data</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="composition-tab" data-bs-toggle="tab" data-bs-target="#composition" type="button" role="tab">Fatty Acid Composition</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="nutritional-tab" data-bs-toggle="tab" data-bs-target="#nutritional" type="button" role="tab">Nutritional Indices</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats" type="button" role="tab">Statistics</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="predict-tab" data-bs-toggle="tab" data-bs-target="#predict" type="button" role="tab">Predict Properties</button>
+    </li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+    <!-- Raw Data Tab -->
+    <div class="tab-pane fade show active" id="data" role="tabpanel">
+        <div class="card mt-3">
+            <div class="card-header bg-info text-white">
+                Raw Data
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    {{ df_html|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Fatty Acid Composition Tab -->
+    <div class="tab-pane fade" id="composition" role="tabpanel">
+        <div class="card mt-3">
+            <div class="card-header bg-primary text-white">
+                Fatty Acid Composition
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <img src="data:image/png;base64,{{ fatty_acid_plot }}" class="img-fluid" alt="Fatty Acid Composition">
+                </div>
+                <div class="mt-3">
+                    <h5>Understanding Fatty Acid Notation:</h5>
+                    <ul>
+                        <li><strong>C16:0 (Palmitic acid)</strong> - Saturated fatty acid, common in palm oil</li>
+                        <li><strong>C18:0 (Stearic acid)</strong> - Saturated fatty acid, found in animal fats and cocoa butter</li>
+                        <li><strong>C18:1 (Oleic acid)</strong> - Monounsaturated omega-9 fatty acid, abundant in olive oil</li>
+                        <li><strong>C18:2 (Linoleic acid)</strong> - Polyunsaturated omega-6 fatty acid, found in vegetable oils</li>
+                        <li><strong>C18:3 (Alpha-linolenic acid)</strong> - Polyunsaturated omega-3 fatty acid, found in flaxseed, chia seeds</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Nutritional Indices Tab -->
+    <div class="tab-pane fade" id="nutritional" role="tabpanel">
+        <div class="card mt-3">
+            <div class="card-header bg-success text-white">
+                Nutritional Indices
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <img src="data:image/png;base64,{{ indices_plot }}" class="img-fluid" alt="Nutritional Indices">
+                </div>
+                
+                <div class="table-responsive mt-4">
+                    <h5>Calculated Nutritional Indices</h5>
+                    {{ df_indices_html|safe }}
+                </div>
+                
+                <div class="mt-3">
+                    <h5>Index Interpretations:</h5>
+                    <ul>
+                        <li><strong>Atherogenicity Index</strong> - Lower values indicate potentially less atherogenic effects (better for cardiovascular health)</li>
+                        <li><strong>PUFA/SFA Ratio</strong> - Higher values generally considered better for cardiovascular health (recommended > 0.4)</li>
+                        <li><strong>Omega-6/Omega-3 Ratio</strong> - Lower values often considered better (recommended < 4:1)</li>
+                        <li><strong>Health Promoting Index</strong> - Higher values indicate potentially better health benefits</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Statistics Tab -->
+    <div class="tab-pane fade" id="stats" role="tabpanel">
+        <div class="card mt-3">
+            <div class="card-header bg-secondary text-white">
+                Descriptive Statistics
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    {{ stats|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Predict Properties Tab -->
+    <div class="tab-pane fade" id="predict" role="tabpanel">
+        <div class="card mt-3">
+            <div class="card-header bg-warning">
+                Predict Properties from Fatty Acid Composition
+            </div>
+            <div class="card-body">
+                <p>Select a property to predict based on fatty acid composition:</p>
+                <div class="row">
+                    {% for property in property_cols %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ property }}</h5>
+                                <p class="card-text">Predict {{ property }} from fatty acid composition using machine learning.</p>
+                                <a href="/predict/{{ property }}" class="btn btn-primary">Predict {{ property }}</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="/blend" class="btn btn-success">Oil Blending Tool</a>
+    <a href="/upload" class="btn btn-secondary">Upload New Data</a>
+</div>
+{% endblock %}
